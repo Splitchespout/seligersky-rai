@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261126-7">
+  <link rel="stylesheet" href="styles.css?v=20261126-8">
 </head>
 <body id="top">
 
@@ -41,6 +41,7 @@
         <a href="#activities">Прокат</a>
         <a href="#gallery">Галерея</a>
         <a href="#reviews">Отзывы</a>
+        <a href="#faq">Вопросы</a>
         <a href="#contacts">Контакты</a>
       </nav>
 
@@ -69,6 +70,7 @@
         <a href="#activities">Пляж, пирсы и прокат</a>
         <a href="#gallery">Фотогалерея</a>
         <a href="#reviews">Отзывы гостей (4.7 ★)</a>
+        <a href="#faq">Частые вопросы</a>
         <a href="#contacts">Как добраться и контакты</a>
         <div class="mobile-menu-cta">
           <a href="tel:+79157150816" class="btn-primary-full">Позвонить +7 (915) 715-08-16</a>
@@ -502,6 +504,7 @@
               <strong id="priceTableTitle">Таунхаусы №1–4 (100 м², 2 этажа)</strong>
               <span>Стоимость указана за весь дом в рублях / сутки</span>
             </div>
+            <div class="table-scroll-hint" aria-hidden="true">Листайте таблицу влево ↔ чтобы увидеть все тарифы</div>
             <div class="table-scroll">
               <table class="price-table">
                 <thead>
@@ -811,6 +814,10 @@
             <img src="images/gallery/beach-volleyball.jpg" alt="Пляжный футбол на песчаном берегу" width="800" height="533" loading="lazy">
             <span>Футбол на пляже</span>
           </button>
+          <button type="button" class="gallery-item is-wide" data-cat="houses" data-caption="Ухоженный зелёный двор, качели, беседки и детская зона отдыха">
+            <img src="images/gallery/courtyard-play.jpg" alt="Зелёный двор, качели и зона отдыха базы Селигерский рай" width="800" height="533" loading="lazy">
+            <span>Уютный двор и качели</span>
+          </button>
         </div>
       </div>
     </section>
@@ -918,7 +925,7 @@
         </div>
 
         <div class="faq-grid">
-          <details class="faq-item" name="faq-group" open>
+          <details class="faq-item" name="faq-group">
             <summary>Можно ли приехать со своей лодкой или катером?</summary>
             <p>Да! На территории базы оборудован собственный слип для удобного спуска на воду плавсредств, а также два пирса. Пользование слипом и пирсами для проживающих гостей полностью бесплатное.</p>
           </details>
@@ -1006,11 +1013,13 @@
           </div>
 
           <div class="map-card">
-            <iframe
-              title="База отдыха Селигерский рай на карте Селигера"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=33.155%2C57.072%2C33.295%2C57.132&amp;layer=mapnik&amp;marker=57.098416%2C33.227065"
-              loading="lazy"
-            ></iframe>
+            <div class="map-iframe-wrap">
+              <iframe
+                title="База отдыха Селигерский рай на карте Селигера"
+                src="https://yandex.ru/map-widget/v1/?ll=33.227065%2C57.098416&amp;z=13&amp;pt=33.227065,57.098416,pm2gnm"
+                allowfullscreen="true"
+              ></iframe>
+            </div>
             <div class="map-overlay-card">
               <div>
                 <strong>База отдыха «Селигерский рай»</strong>
@@ -1041,6 +1050,7 @@
         <a href="#prices">Цены 2026–2027</a>
         <a href="#activities">Прокат</a>
         <a href="#gallery">Галерея</a>
+        <a href="#faq">Вопросы</a>
         <a href="https://vk.com/otdyhseliger" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
         <a href="https://t.me/otdyhseliger" target="_blank" rel="noopener noreferrer">Telegram</a>
       </div>
@@ -1076,26 +1086,28 @@
       <button type="button" class="modal-close" data-close-modal aria-label="Закрыть">&times;</button>
     </div>
 
-    <form class="modal-body" id="bookingForm">
-      <div class="booking-summary-box" id="bookingSummaryBox"></div>
+    <div class="modal-body">
+      <form class="booking-form-fields" id="bookingForm">
+        <div class="booking-summary-box" id="bookingSummaryBox"></div>
 
-      <div class="form-grid">
-        <div>
-          <label class="field-label" for="guestName">Ваше имя</label>
-          <input type="text" id="guestName" class="form-input" placeholder="Например, Алексей" required autocomplete="name">
+        <div class="form-grid">
+          <div>
+            <label class="field-label" for="guestName">Ваше имя</label>
+            <input type="text" id="guestName" class="form-input" placeholder="Например, Алексей" required autocomplete="name">
+          </div>
+          <div>
+            <label class="field-label" for="guestPhone">Телефон для связи</label>
+            <input type="tel" id="guestPhone" class="form-input" placeholder="+7 (999) 000-00-00" required autocomplete="tel">
+          </div>
         </div>
+
         <div>
-          <label class="field-label" for="guestPhone">Телефон для связи</label>
-          <input type="tel" id="guestPhone" class="form-input" placeholder="+7 (999) 000-00-00" required autocomplete="tel">
+          <label class="field-label" for="guestComment">Пожелания (лодка, дети, время заезда)</label>
+          <input type="text" id="guestComment" class="form-input" placeholder="Например, приедем к 15:00, нужна вёсельная лодка">
         </div>
-      </div>
 
-      <div>
-        <label class="field-label" for="guestComment">Пожелания (лодка, дети, время заезда)</label>
-        <input type="text" id="guestComment" class="form-input" placeholder="Например, приедем к 15:00, нужна вёсельная лодка">
-      </div>
-
-      <button type="submit" class="btn-cta-terracotta">Сформировать заявку</button>
+        <button type="submit" class="btn-cta-terracotta">Сформировать заявку</button>
+      </form>
 
       <div class="booking-success" id="bookingSuccess" hidden>
         <strong>Заявка сформирована!</strong>
@@ -1104,13 +1116,14 @@
           <a href="tel:+79157150816" class="btn-outline-dark">Позвонить</a>
           <a href="https://t.me/otdyhseliger" target="_blank" rel="noopener noreferrer" class="btn-outline-dark">Открыть Telegram</a>
           <button type="button" class="btn-outline-dark is-full" id="copyRequestBtn">Скопировать текст заявки</button>
+          <button type="button" class="btn-text-back is-full" id="editRequestBtn">← Изменить данные заявки</button>
         </div>
       </div>
 
       <p class="modal-footnote">
         Или свяжитесь напрямую: <a href="tel:+79157150816">+7 (915) 715-08-16</a> (круглосуточно) · <a href="https://t.me/otdyhseliger" target="_blank" rel="noopener noreferrer">Telegram</a> · <a href="https://vk.com/otdyhseliger" target="_blank" rel="noopener noreferrer">ВКонтакте</a>.
       </p>
-    </form>
+    </div>
   </dialog>
 
   <!-- =====================================================================
@@ -1136,6 +1149,6 @@
     </div>
   </dialog>
 
-  <script src="script.js?v=20261126-7"></script>
+  <script src="script.js?v=20261126-8"></script>
 </body>
 </html>

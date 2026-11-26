@@ -127,18 +127,34 @@
   const burgerBtn = document.getElementById('burgerBtn');
   const mobileMenu = document.getElementById('mobileMenu');
 
+  function setMobileMenuOpen(open) {
+    if (!burgerBtn || !mobileMenu) return;
+    mobileMenu.hidden = !open;
+    burgerBtn.classList.toggle('is-open', open);
+    burgerBtn.setAttribute('aria-expanded', String(open));
+    burgerBtn.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+  }
+
   if (burgerBtn && mobileMenu) {
     burgerBtn.addEventListener('click', () => {
-      const open = mobileMenu.hidden;
-      mobileMenu.hidden = !open;
-      burgerBtn.setAttribute('aria-expanded', String(open));
+      setMobileMenuOpen(mobileMenu.hidden);
     });
 
     mobileMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        mobileMenu.hidden = true;
-        burgerBtn.setAttribute('aria-expanded', 'false');
-      });
+      link.addEventListener('click', () => setMobileMenuOpen(false));
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mobileMenu.hidden) {
+        setMobileMenuOpen(false);
+        burgerBtn.focus();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 980 && !mobileMenu.hidden) {
+        setMobileMenuOpen(false);
+      }
     });
   }
 
@@ -749,11 +765,13 @@
   const bookingSuccess = document.getElementById('bookingSuccess');
   const bookingSuccessText = document.getElementById('bookingSuccessText');
   const copyRequestBtn = document.getElementById('copyRequestBtn');
+  const editRequestBtn = document.getElementById('editRequestBtn');
   let lastRequestMessage = '';
 
   let customModalContext = null;
 
   function openBookingModal(customText = null) {
+    bookingForm.hidden = false;
     bookingSuccess.hidden = true;
     copyRequestBtn.textContent = 'Скопировать текст заявки';
     customModalContext = customText;
@@ -805,8 +823,16 @@
     const extra = comment ? ` Пожелания: ${comment}.` : '';
     lastRequestMessage = `Заявка в «Селигерский рай»: ${baseText}. Имя: ${name}, тел: ${phone}.${extra}`;
     bookingSuccessText.textContent = lastRequestMessage;
+    bookingForm.hidden = true;
     bookingSuccess.hidden = false;
   });
+
+  if (editRequestBtn) {
+    editRequestBtn.addEventListener('click', () => {
+      bookingSuccess.hidden = true;
+      bookingForm.hidden = false;
+    });
+  }
 
   copyRequestBtn.addEventListener('click', async () => {
     try {
@@ -830,18 +856,42 @@
     document.documentElement.classList.add('reveal-ready');
     revealTargets.forEach((el, idx) => {
       el.setAttribute('data-reveal', '');
-      el.style.setProperty('--reveal-delay', `${(idx % 4) * 55}ms`);
+      el.style.setProperty('--reveal-delay', `${(idx % 4) * 45}ms`);
     });
+
+    const markRevealed = (el, obs) => {
+      if (el.classList.contains('is-revealed')) return;
+      el.classList.add('is-revealed');
+      if (obs) obs.unobserve(el);
+      window.setTimeout(() => {
+        el.style.removeProperty('--reveal-delay');
+      }, 650);
+    };
 
     const revealObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        obs.unobserve(entry.target);
+        markRevealed(entry.target, obs);
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    }, { threshold: 0.01, rootMargin: '0px 0px 100px 0px' });
 
     revealTargets.forEach((el) => revealObserver.observe(el));
+
+    // Страховка при быстром скролле и прямых прыжках по якорным ссылкам (всё выше и в зоне экрана сразу видно)
+    const revealPassedOrVisible = () => {
+      const vh = window.innerHeight || 800;
+      revealTargets.forEach((el) => {
+        if (el.classList.contains('is-revealed')) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vh + 120) {
+          markRevealed(el, revealObserver);
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealPassedOrVisible, { passive: true });
+    window.addEventListener('hashchange', () => window.setTimeout(revealPassedOrVisible, 60));
+    window.setTimeout(revealPassedOrVisible, 250);
   }
 
   const scrollTopBtn = document.getElementById('scrollTopBtn');
@@ -859,10 +909,7 @@
   if (brandTopBtn) {
     brandTopBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      if (mobileMenu && !mobileMenu.hidden) {
-        mobileMenu.hidden = true;
-        if (burgerBtn) burgerBtn.setAttribute('aria-expanded', 'false');
-      }
+      setMobileMenuOpen(false);
       scrollToTopSmooth();
     });
   }
